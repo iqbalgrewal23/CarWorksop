@@ -1,23 +1,31 @@
 const db = require('./config/db');
-// bcryptjs removed as it is not needed for this seed script 
-// Wait, I didn't install bcryptjs in the plan. I'll just insert plain text for now or mock the login.
-// Actually, I need to generate a token for testing. I'll create a helper script to generate a token.
+const bcrypt = require('bcryptjs');
 
 const seed = async () => {
     try {
-        // Clear existing data
+        console.log('Seeding database...');
+
+        // Disable FK checks to clear tables
         await db.query('SET FOREIGN_KEY_CHECKS = 0');
         await db.query('TRUNCATE TABLE Appointments');
         await db.query('TRUNCATE TABLE Vehicles');
         await db.query('TRUNCATE TABLE Users');
+        await db.query('TRUNCATE TABLE Services');
         await db.query('SET FOREIGN_KEY_CHECKS = 1');
 
-        // Insert Users
-        const [admin] = await db.query(`INSERT INTO Users (name, email, password, role) VALUES ('Admin User', 'admin@example.com', 'password123', 'admin')`);
-        const [customer] = await db.query(`INSERT INTO Users (name, email, password, role) VALUES ('John Doe', 'john@example.com', 'password123', 'customer')`);
+        // Hash password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash('password123', salt);
 
-        const adminId = admin.insertId;
+        // Insert Users
+        const [admin] = await db.query(`INSERT INTO Users (name, email, password, role) VALUES ('Admin User', 'admin@example.com', ?, 'admin')`, [hashedPassword]);
+        const [customer] = await db.query(`INSERT INTO Users (name, email, password, role) VALUES ('John Doe', 'john@example.com', ?, 'customer')`, [hashedPassword]);
         const customerId = customer.insertId;
+
+        // Insert Services
+        const [svc1] = await db.query(`INSERT INTO Services (name, description, price, estimated_duration_minutes) VALUES ('Oil Change', 'Standard oil and filter change', 50.00, 30)`);
+        const [svc2] = await db.query(`INSERT INTO Services (name, description, price, estimated_duration_minutes) VALUES ('Brake Inspection', 'Check pads and rotors', 80.00, 60)`);
+        const serviceId1 = svc1.insertId;
 
         // Insert Vehicles
         const [vehicle] = await db.query(`INSERT INTO Vehicles (user_id, make, model, year, license_plate) VALUES (?, 'Toyota', 'Camry', 2020, 'ABC-123')`, [customerId]);
@@ -25,8 +33,8 @@ const seed = async () => {
 
         // Insert Appointments
         const today = new Date().toISOString().slice(0, 10);
-        await db.query(`INSERT INTO Appointments (user_id, vehicle_id, date, status, service_type, mechanic_notes) VALUES (?, ?, ?, 'Pending', 'Oil Change', '')`, [customerId, vehicleId, today + ' 10:00:00']);
-        await db.query(`INSERT INTO Appointments (user_id, vehicle_id, date, status, service_type, mechanic_notes) VALUES (?, ?, ?, 'In-Progress', 'Brake Check', 'Checking pads')`, [customerId, vehicleId, today + ' 12:00:00']);
+        // Using service_id instead of service_type
+        await db.query(`INSERT INTO Appointments (user_id, vehicle_id, date, status, service_id, mechanic_notes) VALUES (?, ?, ?, 'Pending', ?, '')`, [customerId, vehicleId, today + ' 10:00:00', serviceId1]);
 
         console.log('Database seeded successfully');
         process.exit();
