@@ -10,6 +10,7 @@ CREATE TABLE Users (
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
+    phone VARCHAR(20),
     role ENUM('admin', 'mechanic', 'customer') DEFAULT 'customer',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -20,6 +21,7 @@ CREATE TABLE Services (
     description TEXT,
     price DECIMAL(10, 2) NOT NULL,
     estimated_duration_minutes INT DEFAULT 60,
+    image_url VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -45,22 +47,44 @@ CREATE TABLE Vehicles (
     model VARCHAR(50) NOT NULL,
     year INT NOT NULL,
     license_plate VARCHAR(20) NOT NULL,
+    vin VARCHAR(50),
     FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE Appointments (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    vehicle_id INT NOT NULL,
+    
+    -- Registered User linkage (Optional)
+    user_id INT,
+    vehicle_id INT,
+    
+    -- Guest / One-time Details (Used if user_id or vehicle_id is NULL)
+    guest_name VARCHAR(255),
+    guest_email VARCHAR(255),
+    guest_phone VARCHAR(50),
+    
+    vehicle_make VARCHAR(50),
+    vehicle_model VARCHAR(50),
+    vehicle_year INT,
+    vehicle_license_plate VARCHAR(20),
+    
+    -- Service Details
     service_id INT,
+    
+    -- Scheduling
+    appointment_date DATE NOT NULL,
+    appointment_time TIME NOT NULL,
+    
+    -- Admin / Worker Allocation
     mechanic_id INT,
     bay_id INT,
-    date DATETIME NOT NULL,
-    status ENUM('Pending', 'In-Progress', 'Completed', 'Cancelled') DEFAULT 'Pending',
+    
+    status ENUM('Pending', 'Confirmed', 'In-Progress', 'Completed', 'Cancelled') DEFAULT 'Pending',
     mechanic_notes TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
-    FOREIGN KEY (vehicle_id) REFERENCES Vehicles(id) ON DELETE CASCADE,
+    
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE SET NULL,
+    FOREIGN KEY (vehicle_id) REFERENCES Vehicles(id) ON DELETE SET NULL,
     FOREIGN KEY (service_id) REFERENCES Services(id) ON DELETE SET NULL,
     FOREIGN KEY (mechanic_id) REFERENCES Employees(id) ON DELETE SET NULL,
     FOREIGN KEY (bay_id) REFERENCES Bays(id) ON DELETE SET NULL

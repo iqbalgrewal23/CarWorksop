@@ -25,14 +25,14 @@ const getUserProfile = async (req, res) => {
 // @route   POST /api/users/vehicles
 // @access  Private
 const addVehicle = async (req, res) => {
-    const { make, model, year, license_plate } = req.body;
+    const { make, model, year, license_plate, vin } = req.body;
 
     try {
         const [result] = await db.query(
-            'INSERT INTO Vehicles (user_id, make, model, year, license_plate) VALUES (?, ?, ?, ?, ?)',
-            [req.user.id, make, model, year, license_plate]
+            'INSERT INTO Vehicles (user_id, make, model, year, license_plate, vin) VALUES (?, ?, ?, ?, ?, ?)',
+            [req.user.id, make, model, year, license_plate, vin]
         );
-        res.status(201).json({ id: result.insertId, user_id: req.user.id, make, model, year, license_plate });
+        res.status(201).json({ id: result.insertId, user_id: req.user.id, make, model, year, license_plate, vin });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server Error' });

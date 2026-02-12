@@ -3,7 +3,9 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-const verifyToken = (req, res, next) => {
+const db = require('../config/db');
+
+const verifyToken = async (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
 
@@ -12,11 +14,17 @@ const verifyToken = (req, res, next) => {
     }
 
     try {
-        const verified = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = verified;
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const [users] = await db.query('SELECT * FROM Users WHERE id = ?', [decoded.id]);
+
+        if (users.length === 0) {
+            return res.status(401).json({ message: 'User not found' });
+        }
+
+        req.user = users[0];
         next();
     } catch (err) {
-        res.status(403).json({ message: 'Invalid Token' });
+        return res.status(403).json({ message: 'Invalid Token' });
     }
 };
 

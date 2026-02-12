@@ -4,114 +4,177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Shift Key Mechanic Scheduler</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Dashboard - Shift Key Mechanics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="/">Shift Key Mechanics</a>
-            <div class="d-flex">
-                <span class="navbar-text text-white me-3" id="user-greeting">Welcome</span>
-                <button class="btn btn-outline-light btn-sm" onclick="logout()">Logout</button>
-            </div>
-        </div>
-    </nav>
 
-    <div class="container mt-4">
-        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="pills-garage-tab" data-bs-toggle="pill"
-                    data-bs-target="#pills-garage" type="button" role="tab">My Garage</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="pills-book-tab" data-bs-toggle="pill" data-bs-target="#pills-book"
-                    type="button" role="tab">Book Appointment</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="pills-history-tab" data-bs-toggle="pill" data-bs-target="#pills-history"
-                    type="button" role="tab">Service History</button>
-            </li>
-        </ul>
-        <div class="tab-content" id="pills-tabContent">
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="/">
+                    <h1>SHIFT KEY <span style="color:white; font-size: 0.8em; font-weight: 300;">MECHANICS</span></h1>
+                </a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="#" onclick="logout()">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container section">
+        <div class="dashboard-header"
+            style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem;">
+            <h2 id="user-greeting">Welcome</h2>
+            <button class="btn-primary" onclick="window.location.href='/'">Book New Appointment</button>
+        </div>
+
+        <div class="dashboard-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:2rem;">
+
             <!-- My Garage -->
-            <div class="tab-pane fade show active" id="pills-garage" role="tabpanel">
-                <h3>My Vehicles</h3>
-                <!-- Add Vehicle Button -->
-                <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addVehicleModal">Add
-                    Vehicle</button>
-                <div id="vehicles-list" class="row">
-                    <!-- Vehicles loaded here -->
+            <div class="card"
+                style="background:#fff; padding:2rem; border-radius:10px; box-shadow:0 5px 15px rgba(0,0,0,0.05);">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                    <h3>My Garage</h3>
+                    <button class="btn-primary" style="font-size:0.8rem; padding:0.5rem 1rem;"
+                        onclick="openAddVehicleModal()">+ Add Vehicle</button>
+                </div>
+                <div id="vehicleList">
+                    <p>Loading vehicles...</p>
                 </div>
             </div>
 
-            <!-- Book Appointment -->
-            <div class="tab-pane fade" id="pills-book" role="tabpanel">
-                <h3>Book a Service</h3>
-                <form id="booking-form">
-                    <div class="mb-3">
-                        <label for="booking-vehicle" class="form-label">Select Vehicle</label>
-                        <select class="form-select" id="booking-vehicle" required>
-                            <option value="">Choose a vehicle...</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="booking-service" class="form-label">Select Service</label>
-                        <select class="form-select" id="booking-service" required>
-                            <option value="">Choose a service...</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="booking-date" class="form-label">Preferred Date</label>
-                        <input type="date" class="form-control" id="booking-date" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Request Appointment</button>
-                </form>
-            </div>
-
             <!-- Service History -->
-            <div class="tab-pane fade" id="pills-history" role="tabpanel">
+            <div class="card"
+                style="background:#fff; padding:2rem; border-radius:10px; box-shadow:0 5px 15px rgba(0,0,0,0.05);">
                 <h3>Service History</h3>
-                <div id="history-list">
-                    <!-- History loaded here -->
+                <div id="historyList" style="margin-top:1rem;">
+                    <p>Loading history...</p>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Add Vehicle Modal -->
-    <div class="modal fade" id="addVehicleModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Add New Vehicle</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <div class="modal" id="addVehicleModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeAddVehicleModal()">&times;</span>
+            <h3>Add New Vehicle</h3>
+            <form id="addVehicleForm">
+                <div class="form-group">
+                    <label>Make</label>
+                    <input type="text" id="dash-make" required placeholder="Toyota">
                 </div>
-                <div class="modal-body">
-                    <form id="add-vehicle-form">
-                        <input type="text" class="form-control mb-2" id="vehicle-make" placeholder="Make (e.g. Toyota)"
-                            required>
-                        <input type="text" class="form-control mb-2" id="vehicle-model" placeholder="Model (e.g. Camry)"
-                            required>
-                        <input type="number" class="form-control mb-2" id="vehicle-year" placeholder="Year" required>
-                        <input type="text" class="form-control mb-2" id="vehicle-plate" placeholder="License Plate"
-                            required>
-                        <button type="submit" class="btn btn-primary w-100">Save Vehicle</button>
-                    </form>
+                <div class="form-group">
+                    <label>Model</label>
+                    <input type="text" id="dash-model" required placeholder="Camry">
                 </div>
-            </div>
+                <div class="form-group">
+                    <label>Year</label>
+                    <input type="number" id="dash-year" required placeholder="2020">
+                </div>
+                <div class="form-group">
+                    <label>License Plate</label>
+                    <input type="text" id="dash-plate" required placeholder="ABC-123">
+                </div>
+                <div class="form-group">
+                    <label>VIN (Optional)</label>
+                    <input type="text" id="dash-vin" placeholder="VIN number">
+                </div>
+                <button type="submit" class="btn-primary">Save Vehicle</button>
+            </form>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/app.js"></script>
     <script>
-        checkAuth();
-        loadDashboardData();
-        document.getElementById('add-vehicle-form').addEventListener('submit', handleAddVehicle);
-        document.getElementById('booking-form').addEventListener('submit', handleBooking);
+        // Inline logic for dashboard specific stuff
+
+        async function loadDashboard() {
+            checkAuth(); // Redirects if not logged in
+
+            // Load Vehicles
+            try {
+                const profile = await fetchAPI('/users/profile');
+                const list = document.getElementById('vehicleList');
+                if (profile.vehicles.length === 0) {
+                    list.innerHTML = '<p style="color:#666;">No vehicles added yet.</p>';
+                } else {
+                    list.innerHTML = profile.vehicles.map(v => `
+                        <div style="border-bottom:1px solid #eee; padding:1rem 0;">
+                            <strong>${v.year} ${v.make} ${v.model}</strong><br>
+                            <span style="color:#666; font-size:0.9rem;">Plate: ${v.license_plate}</span>
+                        </div>
+                    `).join('');
+                }
+            } catch (e) {
+                console.error(e);
+            }
+
+            // Load History
+            try {
+                const history = await fetchAPI('/users/appointments');
+                const list = document.getElementById('historyList');
+                if (history.length === 0) {
+                    list.innerHTML = '<p style="color:#666;">No service history.</p>';
+                } else {
+                    list.innerHTML = history.map(h => `
+                        <div style="border-bottom:1px solid #eee; padding:1rem 0;">
+                            <div style="display:flex; justify-content:space-between;">
+                                <strong>${h.service_name}</strong>
+                                <span style="font-size:0.8rem; padding:0.2rem 0.5rem; border-radius:4px; background:${getStatusColor(h.status)}; color:#fff;">${h.status}</span>
+                            </div>
+                            <small style="color:#666;">${new Date(h.appointment_date).toLocaleDateString()} at ${h.appointment_time}</small><br>
+                            <small>Vehicle: ${h.license_plate}</small>
+                        </div>
+                    `).join('');
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        function getStatusColor(status) {
+            if (status === 'Pending') return '#6c757d';
+            if (status === 'Confirmed') return '#17a2b8';
+            if (status === 'In-Progress') return '#007bff';
+            if (status === 'Completed') return '#28a745';
+            return '#dc3545';
+        }
+
+        function openAddVehicleModal() {
+            document.getElementById('addVehicleModal').classList.add('active');
+        }
+
+        function closeAddVehicleModal() {
+            document.getElementById('addVehicleModal').classList.remove('active');
+        }
+
+        document.getElementById('addVehicleForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const make = document.getElementById('dash-make').value;
+            const model = document.getElementById('dash-model').value;
+            const year = document.getElementById('dash-year').value;
+            const license_plate = document.getElementById('dash-plate').value;
+            const vin = document.getElementById('dash-vin').value;
+
+            try {
+                await fetchAPI('/users/vehicles', 'POST', { make, model, year, license_plate, vin });
+                closeAddVehicleModal();
+                loadDashboard(); // Refresh
+                e.target.reset();
+            } catch (err) {
+                alert(err.message);
+            }
+        });
+
+        loadDashboard();
     </script>
 </body>
 

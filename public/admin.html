@@ -4,50 +4,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Shift Key Mechanic Scheduler</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Admin Dashboard - Shift Key Mechanics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        .sidebar {
+            background: #fff;
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            height: 100%;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 0.8rem;
+            border-radius: 5px;
+            color: var(--text-color);
+            transition: all 0.2s;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background: var(--primary-color);
+            color: var(--secondary-color);
+        }
+
+        .admin-section {
+            display: none;
+            background: #fff;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .admin-section.active {
+            display: block;
+        }
+
+        .stat-card {
+            background: var(--light-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th,
+        td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+    </style>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-danger">
+
+    <header>
         <div class="container">
-            <a class="navbar-brand" href="/">Shift Key Admin</a>
-            <div class="d-flex">
-                <button class="btn btn-outline-light btn-sm" onclick="logout()">Logout</button>
+            <div class="logo">
+                <a href="/">
+                    <h1>SHIFT KEY <span style="color:white; font-size: 0.8em; font-weight: 300;">ADMIN</span></h1>
+                </a>
             </div>
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="#" onclick="logout()">Logout</a></li>
+                </ul>
+            </nav>
         </div>
-    </nav>
+    </header>
 
-    <div class="container mt-4">
-        <div class="row">
-            <div class="col-md-3">
-                <div class="list-group">
-                    <a href="#" class="list-group-item list-group-item-action active" id="link-dashboard"
-                        onclick="showAdminSection('dashboard')">Dashboard</a>
-                    <a href="#" class="list-group-item list-group-item-action" id="link-services"
-                        onclick="showAdminSection('services')">Manage Services</a>
-                    <a href="#" class="list-group-item list-group-item-action" id="link-appointments"
-                        onclick="showAdminSection('appointments')">Appointments</a>
-                </div>
+    <div class="container section">
+        <div style="display: grid; grid-template-columns: 250px 1fr; gap: 2rem;">
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <ul>
+                    <li><a href="#" class="active" onclick="showSection('dashboard', this)">Dashboard</a></li>
+                    <li><a href="#" onclick="showSection('appointments', this)">Appointments</a></li>
+                    <li><a href="#" onclick="showSection('services', this)">Services</a></li>
+                    <li><a href="#" onclick="showSection('customers', this)">Customers</a></li>
+                </ul>
             </div>
-            <div class="col-md-9">
-                <!-- Dashboard Stats -->
-                <div id="admin-dashboard-section" class="admin-section">
-                    <h3>Today's Overview</h3>
-                    <div class="row text-center" id="admin-stats">
-                        <!-- Stats loaded via JS -->
+
+            <!-- Content Area -->
+            <div>
+                <!-- Dashboard Section -->
+                <div id="dashboard" class="admin-section active">
+                    <h2>Today's Overview</h2>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 1rem;">
+                        <div class="stat-card">
+                            <h3 id="stat-pending">0</h3>
+                            <p>Pending</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="stat-confirmed">0</h3>
+                            <p>Confirmed</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="stat-inprogress">0</h3>
+                            <p>In Progress</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="stat-completed">0</h3>
+                            <p>Completed</p>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Manage Services -->
-                <div id="admin-services-section" class="admin-section d-none">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h3>Service Catalog</h3>
-                        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addServiceModal">Add
-                            Service</button>
+                <!-- Appointments Section -->
+                <div id="appointments" class="admin-section">
+                    <h2>Manage Appointments</h2>
+                    <div style="overflow-x: auto;">
+                        <table id="appointmentsTable">
+                            <thead>
+                                <tr>
+                                    <th>Date/Time</th>
+                                    <th>Customer</th>
+                                    <th>Service</th>
+                                    <th>Status</th>
+                                    <th>Allocation</th> <!-- Bay/Mechanic -->
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Loaded via JS -->
+                            </tbody>
+                        </table>
                     </div>
-                    <table class="table table-striped">
+                </div>
+
+                <!-- Services Section -->
+                <div id="services" class="admin-section">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <h2>Manage Services</h2>
+                        <button class="btn-primary" onclick="openAddServiceModal()">+ Add Service</button>
+                    </div>
+                    <table id="servicesTable">
                         <thead>
                             <tr>
                                 <th>Name</th>
@@ -56,53 +173,272 @@
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody id="services-table-body">
-                            <!-- Services loaded here -->
+                        <tbody>
+                            <!-- Loaded via JS -->
                         </tbody>
                     </table>
                 </div>
 
-                <!-- Appointments -->
-                <div id="admin-appointments-section" class="admin-section d-none">
-                    <h3>All Appointments</h3>
-                    <div id="admin-appointments-list">
-                        <!-- Appointments loaded here -->
-                    </div>
+                <!-- Customers Section -->
+                <div id="customers" class="admin-section">
+                    <h2>Registered Customers</h2>
+                    <table id="customersTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Vehicles</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Loaded via JS -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Add Service Modal -->
-    <div class="modal fade" id="addServiceModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Add New Service</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <div class="modal" id="addServiceModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeAddServiceModal()">&times;</span>
+            <h3>Add New Service</h3>
+            <form id="addServiceForm">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" id="svc-name" required>
                 </div>
-                <div class="modal-body">
-                    <form id="add-service-form">
-                        <input type="text" class="form-control mb-2" id="service-name" placeholder="Service Name"
-                            required>
-                        <textarea class="form-control mb-2" id="service-desc" placeholder="Description"></textarea>
-                        <input type="number" step="0.01" class="form-control mb-2" id="service-price"
-                            placeholder="Price" required>
-                        <input type="number" class="form-control mb-2" id="service-duration"
-                            placeholder="Duration (minutes)" value="60">
-                        <button type="submit" class="btn btn-primary w-100">Save Service</button>
-                    </form>
+                <div class="form-group">
+                    <label>Description</label>
+                    <input type="text" id="svc-desc" required>
                 </div>
-            </div>
+                <div class="form-group">
+                    <label>Price</label>
+                    <input type="number" step="0.01" id="svc-price" required>
+                </div>
+                <div class="form-group">
+                    <label>Duration (mins)</label>
+                    <input type="number" id="svc-duration" required value="60">
+                </div>
+                <div class="form-group">
+                    <label>Image URL</label>
+                    <input type="text" id="svc-image" placeholder="/images/default.jpg">
+                </div>
+                <button type="submit" class="btn-primary">Save Service</button>
+            </form>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Edit Appointment Modal -->
+    <div class="modal" id="editApptModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeEditApptModal()">&times;</span>
+            <h3>Manage Appointment</h3>
+            <form id="editApptForm">
+                <input type="hidden" id="appt-id">
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="appt-status">
+                        <option value="Pending">Pending</option>
+                        <option value="Confirmed">Confirmed</option>
+                        <option value="In-Progress">In-Progress</option>
+                        <option value="Completed">Completed</option>
+                        <option value="Cancelled">Cancelled</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Assign Bay</label>
+                    <select id="appt-bay">
+                        <option value="">-- Select Bay --</option>
+                        <!-- Loaded via JS -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Assign Mechanic</label>
+                    <select id="appt-mechanic">
+                        <option value="">-- Select Mechanic --</option>
+                        <!-- Loaded via JS -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Notes</label>
+                    <textarea id="appt-notes" rows="3"
+                        style="width:100%; border:1px solid #ddd; padding:0.5rem;"></textarea>
+                </div>
+                <button type="submit" class="btn-primary">Update Appointment</button>
+            </form>
+        </div>
+    </div>
+
     <script src="js/app.js"></script>
     <script>
-        checkAuth('admin');
-        loadAdminDashboard();
-        document.getElementById('add-service-form').addEventListener('submit', handleAddService);
+        // Admin Logic
+
+        let bays = [];
+        let employees = [];
+
+        async function initAdmin() {
+            checkAuth('admin');
+            loadStats();
+            loadAppointments();
+            loadAdminServices();
+            loadCustomers();
+
+            // Preload options
+            try {
+                bays = await fetchAPI('/admin/bays');
+                employees = await fetchAPI('/admin/employees');
+                populateSelects();
+            } catch (e) { }
+        }
+
+        function populateSelects() {
+            const baySel = document.getElementById('appt-bay');
+            const mechSel = document.getElementById('appt-mechanic');
+
+            if (baySel) baySel.innerHTML = '<option value="">-- Select Bay --</option>' + bays.map(b => `<option value="${b.id}">${b.name} (${b.status})</option>`).join('');
+            if (mechSel) mechSel.innerHTML = '<option value="">-- Select Mechanic --</option>' + employees.map(e => `<option value="${e.id}">${e.name}</option>`).join('');
+        }
+
+        function showSection(id, el) {
+            document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+
+            document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
+            if (el) el.classList.add('active');
+        }
+
+        async function loadStats() {
+            try {
+                const stats = await fetchAPI('/admin/dashboard-stats');
+                document.getElementById('stat-pending').textContent = stats.Pending || 0;
+                document.getElementById('stat-confirmed').textContent = stats.Confirmed || 0;
+                document.getElementById('stat-inprogress').textContent = stats['In-Progress'] || 0;
+                document.getElementById('stat-completed').textContent = stats.Completed || 0;
+            } catch (e) { }
+        }
+
+        async function loadAppointments() {
+            try {
+                const appts = await fetchAPI('/admin/appointments');
+                const tbody = document.querySelector('#appointmentsTable tbody');
+                tbody.innerHTML = appts.map(a => `
+                    <tr>
+                        <td>
+                            ${new Date(a.appointment_date).toLocaleDateString()}<br>
+                            <small>${a.appointment_time}</small>
+                        </td>
+                        <td>
+                            <strong>${a.customer_name}</strong><br>
+                            <small>${a.customer_email}</small>
+                        </td>
+                        <td>${a.service_name}</td>
+                        <td><span style="padding:0.2rem 0.5rem; border-radius:4px; background:${getStatusColorAdmin(a.status)}; color:#fff;">${a.status}</span></td>
+                        <td>
+                            Bay: ${a.bay_name || 'Unassigned'}<br>
+                            Mech: ${a.mechanic_name || 'Unassigned'}
+                        </td>
+                        <td>
+                            <button class="btn-primary" style="padding:0.3rem 0.6rem; font-size:0.8rem;" onclick="openEditAppt(${a.id}, '${a.status}', ${a.bay_id}, ${a.mechanic_id}, '${a.mechanic_notes || ''}')">Manage</button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (e) { }
+        }
+
+        function getStatusColorAdmin(status) {
+            if (status === 'Pending') return '#6c757d'; // grey
+            if (status === 'Confirmed') return '#17a2b8'; // teal
+            if (status === 'In-Progress') return '#007bff'; // blue
+            if (status === 'Completed') return '#28a745'; // green
+            return '#dc3545'; // red
+        }
+
+        async function loadAdminServices() {
+            try {
+                const services = await fetchAPI('/services');
+                const tbody = document.querySelector('#servicesTable tbody');
+                tbody.innerHTML = services.map(s => `
+                    <tr>
+                        <td>${s.name}</td>
+                        <td>$${s.price}</td>
+                        <td>${s.estimated_duration_minutes} mins</td>
+                        <td><button class="btn-primary" style="background:#dc3545;" onclick="deleteAdminService(${s.id})">Delete</button></td>
+                    </tr>
+                `).join('');
+            } catch (e) { }
+        }
+
+        async function loadCustomers() {
+            try {
+                const customers = await fetchAPI('/admin/customers');
+                const tbody = document.querySelector('#customersTable tbody');
+                tbody.innerHTML = customers.map(c => `
+                    <tr>
+                        <td>${c.name}</td>
+                        <td>${c.email}</td>
+                        <td>${c.phone || '-'}</td>
+                        <td>${c.vehicles.length} Vehicles</td>
+                    </tr>
+                `).join('');
+            } catch (e) { }
+        }
+
+        async function deleteAdminService(id) {
+            if (confirm("Are you sure?")) {
+                await fetchAPI(`/services/${id}`, 'DELETE');
+                loadAdminServices();
+            }
+        }
+
+        // Modals
+        function openAddServiceModal() { document.getElementById('addServiceModal').classList.add('active'); }
+        function closeAddServiceModal() { document.getElementById('addServiceModal').classList.remove('active'); }
+
+        document.getElementById('addServiceForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const body = {
+                name: document.getElementById('svc-name').value,
+                description: document.getElementById('svc-desc').value,
+                price: document.getElementById('svc-price').value,
+                estimated_duration_minutes: document.getElementById('svc-duration').value,
+                image_url: document.getElementById('svc-image').value,
+            };
+            await fetchAPI('/services', 'POST', body);
+            closeAddServiceModal();
+            loadAdminServices();
+        });
+
+        // Edit Appointment
+        function openEditAppt(id, status, bayId, mechId, notes) {
+            document.getElementById('appt-id').value = id;
+            document.getElementById('appt-status').value = status;
+            document.getElementById('appt-bay').value = bayId || '';
+            document.getElementById('appt-mechanic').value = mechId || '';
+            document.getElementById('appt-notes').value = notes;
+            document.getElementById('editApptModal').classList.add('active');
+        }
+
+        function closeEditApptModal() { document.getElementById('editApptModal').classList.remove('active'); }
+
+        document.getElementById('editApptForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('appt-id').value;
+            const body = {
+                status: document.getElementById('appt-status').value,
+                bay_id: document.getElementById('appt-bay').value || null,
+                mechanic_id: document.getElementById('appt-mechanic').value || null,
+                mechanic_notes: document.getElementById('appt-notes').value
+            };
+            await fetchAPI(`/admin/appointments/${id}`, 'PATCH', body);
+            closeEditApptModal();
+            loadAppointments();
+            loadStats();
+        });
+
+        initAdmin();
     </script>
 </body>
 

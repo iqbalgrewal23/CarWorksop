@@ -33,14 +33,14 @@ const getServiceById = async (req, res) => {
 // @route   POST /api/services
 // @access  Private/Admin
 const createService = async (req, res) => {
-    const { name, description, price, estimated_duration_minutes } = req.body;
+    const { name, description, price, estimated_duration_minutes, image_url } = req.body;
 
     try {
         const [result] = await db.query(
-            'INSERT INTO Services (name, description, price, estimated_duration_minutes) VALUES (?, ?, ?, ?)',
-            [name, description, price, estimated_duration_minutes]
+            'INSERT INTO Services (name, description, price, estimated_duration_minutes, image_url) VALUES (?, ?, ?, ?, ?)',
+            [name, description, price, estimated_duration_minutes, image_url]
         );
-        res.status(201).json({ id: result.insertId, name, description, price, estimated_duration_minutes });
+        res.status(201).json({ id: result.insertId, name, description, price, estimated_duration_minutes, image_url });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server Error' });
@@ -51,19 +51,19 @@ const createService = async (req, res) => {
 // @route   PUT /api/services/:id
 // @access  Private/Admin
 const updateService = async (req, res) => {
-    const { name, description, price, estimated_duration_minutes } = req.body;
+    const { name, description, price, estimated_duration_minutes, image_url } = req.body;
 
     try {
         const [result] = await db.query(
-            'UPDATE Services SET name = ?, description = ?, price = ?, estimated_duration_minutes = ? WHERE id = ?',
-            [name, description, price, estimated_duration_minutes, req.params.id]
+            'UPDATE Services SET name = ?, description = ?, price = ?, estimated_duration_minutes = ?, image_url = ? WHERE id = ?',
+            [name, description, price, estimated_duration_minutes, image_url, req.params.id]
         );
 
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: 'Service not found' });
         }
 
-        res.json({ id: req.params.id, name, description, price, estimated_duration_minutes });
+        res.json({ id: req.params.id, name, description, price, estimated_duration_minutes, image_url });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server Error' });

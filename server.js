@@ -5,6 +5,7 @@ const authRoutes = require('./routes/authRoutes');
 const serviceRoutes = require('./routes/serviceRoutes');
 const userRoutes = require('./routes/userRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const bookingRoutes = require('./routes/bookingRoutes');
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/services', serviceRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/bookings', bookingRoutes);
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/public/index.html');

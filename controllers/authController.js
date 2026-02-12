@@ -6,7 +6,7 @@ const generateToken = require('../utils/generateToken');
 // @route   POST /api/auth/register
 // @access  Public
 const registerUser = async (req, res) => {
-    const { name, email, password } = req.body;
+    const { name, email, password, phone } = req.body;
 
     try {
         // Check if user exists
@@ -22,8 +22,8 @@ const registerUser = async (req, res) => {
 
         // Create user
         const [result] = await db.query(
-            'INSERT INTO Users (name, email, password, role) VALUES (?, ?, ?, ?)',
-            [name, email, hashedPassword, 'customer']
+            'INSERT INTO Users (name, email, password, role, phone) VALUES (?, ?, ?, ?, ?)',
+            [name, email, hashedPassword, 'customer', phone]
         );
 
         if (result.insertId) {
@@ -31,6 +31,7 @@ const registerUser = async (req, res) => {
                 _id: result.insertId,
                 name,
                 email,
+                phone,
                 role: 'customer',
                 token: generateToken(result.insertId)
             });

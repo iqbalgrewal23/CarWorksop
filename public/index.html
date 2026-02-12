@@ -3,55 +3,196 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shift Key Mechanic Scheduler</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Shift Key Mechanics | Premium Auto Care</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> <!-- Placeholder for icons -->
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="/">Shift Key Mechanics</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto" id="nav-links">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/login.html">Login / Register</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
 
-    <header class="bg-primary text-white text-center py-5">
+    <!-- Header -->
+    <header>
         <div class="container">
-            <h1>Expert Car Repair Services</h1>
-            <p class="lead">Book your appointment today with our certified mechanics.</p>
-            <a href="/login.html" class="btn btn-light btn-lg mt-3">Book Now</a>
+            <div class="logo">
+                <h1>SHIFT KEY <span style="color:white; font-size: 0.8em; font-weight: 300;">MECHANICS</span></h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="login.html" id="authLink">Login / Register</a></li>
+                </ul>
+            </nav>
+            <button class="btn-primary" onclick="openBookingModal()">Book Appointment</button>
         </div>
     </header>
 
-    <section class="container py-5">
-        <h2 class="text-center mb-4">Our Services</h2>
-        <div class="row" id="services-container">
-            <!-- Services will be loaded here dynamically -->
-            <div class="text-center">
-                <div class="spinner-border" role="status">
-                    <span class="visually-hidden">Loading...</span>
+    <!-- Hero -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h2>Precision Auto Care</h2>
+            <p>Experience top-tier car maintenance with our certified experts. Oil changes, tire services, and brake repairs done right.</p>
+            <button class="btn-primary" onclick="openBookingModal()">Book Now</button>
+        </div>
+    </section>
+
+    <!-- Services -->
+    <section id="services" class="section bg-light">
+        <div class="container">
+            <h2 class="section-title">Our Services</h2>
+            <div class="services-grid" id="servicesGrid">
+                <!-- Services will be injected here via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- History & About -->
+    <section id="about" class="section">
+        <div class="container">
+            <h2 class="section-title">Who We Are</h2>
+            <div class="info-grid">
+                <div class="info-content">
+                    <h3>Our History</h3>
+                    <p>Established in 1985, Shift Key Mechanics started as a small family-owned garage with a passion for engines. Over four decades, we've grown into a premier automotive service center, servicing thousands of vehicles with the same dedication and care as day one.</p>
+                    <p>Our founder, John "Shift" Key, believed that honesty and quality were the only tools a mechanic truly needed. Today, we uphold that legacy in every bolt we turn.</p>
+                </div>
+                <div class="info-content">
+                    <h3>About Us</h3>
+                    <p>We are a team of ASE-certified mechanics dedicated to keeping your vehicle safe and reliable. We specialize in preventative maintenance and critical repairs, using state-of-the-art diagnostic tools.</p>
+                    <p>At Shift Key Mechanics, we don't just fix cars; we build trust. No hidden fees, no unnecessary up-sells, just honest work at fair prices for our community.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <footer class="bg-dark text-white text-center py-3 mt-5">
-        <p>&copy; 2026 Shift Key Mechanic Scheduler. All rights reserved.</p>
+    <!-- Booking Modal -->
+    <div class="modal" id="bookingModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeBookingModal()">&times;</span>
+            <div id="bookingWizard">
+                <!-- Step 1: Select Service -->
+                <div class="step active" id="step1">
+                    <h3>Step 1: Select Service</h3>
+                    <div class="form-group">
+                        <label for="serviceSelect">Choose a Service</label>
+                        <select id="serviceSelect" onchange="enableStep1Next()">
+                            <option value="">-- Select --</option>
+                            <!-- Options injected via JS -->
+                        </select>
+                    </div>
+                    <button class="btn-primary" id="btnStep1" disabled onclick="goToStep(2)">Next</button>
+                </div>
+
+                <!-- Step 2: Vehicle Information -->
+                <div class="step" id="step2">
+                    <h3>Step 2: Vehicle Information</h3>
+                    
+                    <div id="userVehicleSection" class="hidden">
+                        <div class="form-group">
+                            <label>Select Saved Vehicle</label>
+                            <select id="savedVehicleSelect">
+                                <option value="new">-- Add New Vehicle --</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="newVehicleForm">
+                        <div class="form-group">
+                            <label>Make</label>
+                            <input type="text" id="vehicleMake" placeholder="e.g. Toyota">
+                        </div>
+                        <div class="form-group">
+                            <label>Model</label>
+                            <input type="text" id="vehicleModel" placeholder="e.g. Camry">
+                        </div>
+                        <div class="form-group">
+                            <label>Year</label>
+                            <input type="number" id="vehicleYear" placeholder="e.g. 2020">
+                        </div>
+                        <div class="form-group">
+                            <label>License Plate</label>
+                            <input type="text" id="vehiclePlate" placeholder="e.g. ABC-123">
+                        </div>
+                        
+                        <div id="guestInfoSection">
+                            <h4>Guest Contact Info</h4>
+                            <div class="form-group">
+                                <label>Name</label>
+                                <input type="text" id="guestName" placeholder="John Doe">
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" id="guestEmail" placeholder="john@example.com">
+                            </div>
+                            <div class="form-group">
+                                <label>Phone</label>
+                                <input type="tel" id="guestPhone" placeholder="555-0123">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn-primary" style="background:#ddd; color:#333" onclick="goToStep(1)">Back</button>
+                    <button class="btn-primary" onclick="goToStep(3)">Next</button>
+                </div>
+
+                <!-- Step 3: Date & Time -->
+                <div class="step" id="step3">
+                    <h3>Step 3: Select Date & Time</h3>
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="date" id="appointmentDate" onchange="fetchSlots()">
+                    </div>
+                    <div class="form-group">
+                        <label>Available Times</label>
+                        <div class="slot-grid" id="slotGrid">
+                            <!-- Slots injected via JS -->
+                            <p style="color:#666; font-size:0.9rem;">Select a date to see available times.</p>
+                        </div>
+                    </div>
+                    <input type="hidden" id="selectedTime">
+                    
+                    <button class="btn-primary" style="background:#ddd; color:#333" onclick="goToStep(2)">Back</button>
+                    <button class="btn-primary" id="btnBook" disabled onclick="submitBooking()">Confirm Booking</button>
+                </div>
+
+                <!-- Step 4: Success -->
+                <div class="step" id="step4">
+                    <div style="text-align:center;">
+                        <h3 style="color:green; font-size: 2rem;">&#10003;</h3>
+                        <h3>Booking Confirmed!</h3>
+                        <p>Your appointment has been successfully scheduled.</p>
+                        <p id="bookingDetails"></p>
+                        <button class="btn-primary" onclick="closeBookingModal(); location.reload();">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-col">
+                <h4>Shift Key Mechanics</h4>
+                <p>123 Auto Lane, Engine City, EC 54321</p>
+                <p>Phone: (555) 123-4567</p>
+            </div>
+            <div class="footer-col">
+                <h4>Hours</h4>
+                <p>Mon - Fri: 9:00 AM - 5:00 PM</p>
+                <p>Sat: 10:00 AM - 2:00 PM</p>
+                <p>Sun: Closed</p>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2026 Shift Key Mechanics. All rights reserved.</p>
+        </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/app.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', loadServicesForPublic);
-    </script>
 </body>
 </html>
