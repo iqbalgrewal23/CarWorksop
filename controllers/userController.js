@@ -52,10 +52,19 @@ const bookAppointment = async (req, res) => {
             return res.status(404).json({ message: 'Vehicle not found' });
         }
 
+        let appointment_date = date;
+        let appointment_time = '00:00:00';
+
+        if (date && date.includes(' ')) {
+            const parts = date.split(' ');
+            appointment_date = parts[0];
+            appointment_time = parts[1];
+        }
+
         // Setup appointment
         const [result] = await db.query(
-            'INSERT INTO Appointments (user_id, vehicle_id, service_id, date, status) VALUES (?, ?, ?, ?, ?)',
-            [req.user.id, vehicle_id, service_id, date, 'Pending']
+            'INSERT INTO Appointments (user_id, vehicle_id, service_id, appointment_date, appointment_time, status) VALUES (?, ?, ?, ?, ?, ?)',
+            [req.user.id, vehicle_id, service_id, appointment_date, appointment_time, 'Pending']
         );
 
         res.status(201).json({ message: 'Appointment booked successfully', appointmentId: result.insertId });
@@ -76,7 +85,7 @@ const getAppointments = async (req, res) => {
             JOIN Services s ON a.service_id = s.id
             JOIN Vehicles v ON a.vehicle_id = v.id
             WHERE a.user_id = ?
-            ORDER BY a.date DESC
+            ORDER BY a.appointment_date DESC, a.appointment_time DESC
         `;
         const [rows] = await db.query(query, [req.user.id]);
         res.json(rows);
