@@ -75,7 +75,7 @@ async function runVerification() {
         });
         console.log('   Success! History count:', histRes.data.length);
 
-        console.log('--- Verification Complete: SUCCESS ---');
+        console.log('✅ Verification Complete: All system tests passed successfully!');
 
     } catch (error) {
         console.error('--- Verification Failed ---');
