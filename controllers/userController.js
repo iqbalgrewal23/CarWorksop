@@ -69,7 +69,7 @@ const bookAppointment = async (req, res) => {
 
         res.status(201).json({ message: 'Appointment booked successfully', appointmentId: result.insertId });
     } catch (error) {
-        console.error(error);
+        console.error("Error in bookAppointment:", error);
         res.status(500).json({ message: 'Server Error' });
     }
 };
