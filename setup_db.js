@@ -1,3 +1,4 @@
+// Initialization script to create MySQL database and run schema.sql
 const mysql = require('mysql2/promise');
 const fs = require('fs');
 const path = require('path');
