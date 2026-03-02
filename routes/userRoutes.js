@@ -10,6 +10,7 @@ const { verifyToken } = require('../middleware/authMiddleware');
 
 router.use(verifyToken);
 
+// Get details and associated vehicles for the logged-in user
 router.get('/profile', getUserProfile);
 router.post('/vehicles', addVehicle);
 router.post('/appointments', bookAppointment);
