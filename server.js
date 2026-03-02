@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 3000;
 // Apply essential middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static('build'));
 
 // Routes
 app.use('/api/admin', adminRoutes);
@@ -30,7 +30,7 @@ app.get('/api/health', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/public/index.html');
+    res.sendFile(__dirname + '/build/index.html');
 });
 
 app.listen(PORT, () => {
