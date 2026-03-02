@@ -9,6 +9,9 @@
   "author": "Iqbal Grewal",
   "license": "ISC",
   "description": "Full-stack Node.js web application for a car mechanic scheduling system.",
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "dependencies": {
     "axios": "^1.13.5",
     "bcryptjs": "^3.0.3",
