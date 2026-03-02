@@ -1,3 +1,4 @@
+// Verification script for the redesigned guest and registered user flows
 const axios = require('axios');
 
 const API_URL = 'http://localhost:3000/api';
