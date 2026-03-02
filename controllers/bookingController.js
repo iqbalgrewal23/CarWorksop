@@ -1,3 +1,4 @@
+// Booking Controller: Manages appointment slots and creation
 const db = require('../config/db');
 
 // @desc    Get available time slots for a specific date
