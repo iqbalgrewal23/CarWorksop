@@ -1,3 +1,4 @@
+// Seed script to populate the database with initial admin, services, and test data
 const db = require('./config/db');
 const bcrypt = require('bcryptjs');
 
@@ -44,7 +45,7 @@ const seed = async () => {
 
         // Insert Appointments
         const today = new Date().toISOString().slice(0, 10);
-        
+
         // 1. Registered User Appointment (Pending)
         await db.query(`
             INSERT INTO Appointments 
