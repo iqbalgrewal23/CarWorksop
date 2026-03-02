@@ -1,3 +1,4 @@
+// NOTE: Ensure the database is properly seeded using seed.js before running this verification
 const axios = require('axios');
 
 const API_URL = 'http://localhost:3000/api';
