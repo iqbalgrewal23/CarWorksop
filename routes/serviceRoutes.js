@@ -9,6 +9,9 @@ const {
 } = require('../controllers/serviceController');
 const { verifyToken, isAdmin } = require('../middleware/authMiddleware');
 
+// Service Management Routes
+// Handles CRUD operations for public and admin services
+
 router.route('/')
     .get(getServices)
     .post(verifyToken, isAdmin, createService);
