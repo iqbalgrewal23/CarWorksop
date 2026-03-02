@@ -1,4 +1,7 @@
-const API_URL = '/api';
+// If hosted, we want to hit the same domain's /api. 
+// If running locally on different ports (e.g. frontend on 8080, backend on 3000), 
+// you would set this explicitly, but for Hostinger VPS, they run on the same origin via Nginx.
+const API_URL = window.location.hostname === 'localhost' ? 'http://localhost:3000/api' : '/api';
 
 // --- Auth Utilities ---
 
