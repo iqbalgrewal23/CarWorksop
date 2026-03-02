@@ -13,6 +13,7 @@ const {
 // All routes require authentication and admin role
 router.use(verifyToken, isAdmin);
 
+// Fetch overall metrics and counts for the admin dashboard
 router.get('/dashboard-stats', getDashboardStats);
 router.get('/appointments', getAppointments);
 router.patch('/appointments/:id', updateAppointment);
