@@ -1,6 +1,11 @@
 # CarMechanic - Shift Key Mechanics
 A full-stack Node.js web application for a car mechanic scheduling system.
 
+## Features
+- Guest & Registered User Appointments
+- Admin Dashboard with metrics
+- Service & Vehicle Management
+
 ## Setup Instructions
 1. Clone the repository
 2. Run `npm install`
