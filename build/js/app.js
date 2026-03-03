@@ -1,4 +1,4 @@
-const API_URL = 'https://car-workshop-app.onrender.com/api';
+const API_URL = 'https://carworksop.onrender.com/api';
 
 // --- Auth Utilities ---
 
