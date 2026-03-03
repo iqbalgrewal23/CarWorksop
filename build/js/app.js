@@ -1,8 +1,4 @@
-// If we are on Render (or localhost testing the backend), use /api.
-// If the user is just opening index.html directly from their computer, window.location.protocol is 'file:'
-const API_URL = (window.location.protocol === 'file:' || window.location.hostname === 'iqbalgrewal.com')
-    ? 'https://car-workshop-app.onrender.com/api' // Replace with your ACTUAL Render URL
-    : '/api';
+const API_URL = '/api';
 
 // --- Auth Utilities ---
 
