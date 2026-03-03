@@ -19,7 +19,7 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
-app.use(express.static('build'));
+// Serve static files removed for Hostinger Native plan
 
 // Routes
 app.use('/api/admin', adminRoutes);
@@ -73,8 +73,9 @@ app.get('/api/test-db', async (req, res) => {
     }
 });
 
+// Base route
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/build/index.html');
+    res.status(200).json({ status: 'OK', message: 'API is running' });
 });
 
 app.listen(PORT, () => {
