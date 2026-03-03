@@ -1,7 +1,8 @@
-// If hosted, we want to hit the same domain's /api. 
-// If running locally on different ports (e.g. frontend on 8080, backend on 3000), 
-// you would set this explicitly, but for Hostinger VPS, they run on the same origin via Nginx.
-const API_URL = window.location.hostname === 'localhost' ? 'http://localhost:3000/api' : '/api';
+// If we are on Render (or localhost testing the backend), use /api.
+// If the user is just opening index.html directly from their computer, window.location.protocol is 'file:'
+const API_URL = (window.location.protocol === 'file:' || window.location.hostname === 'iqbalgrewal.com')
+    ? 'https://car-workshop-app.onrender.com/api' // Replace with your ACTUAL Render URL
+    : '/api';
 
 // --- Auth Utilities ---
 

@@ -29,6 +29,46 @@ app.get('/api/health', (req, res) => {
     res.status(200).json({ status: 'OK', message: 'Server is healthy' });
 });
 
+// DB Test Endpoint
+app.get('/api/test-db', async (req, res) => {
+    try {
+        const db = require('./config/db');
+        const [rows] = await db.query('SHOW TABLES');
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Connected to database successfully!',
+            tables: rows,
+            envVars: {
+                PORT: process.env.PORT,
+                DB_HOST: process.env.DB_HOST,
+                DB_USER: process.env.DB_USER,
+                DB_NAME: process.env.DB_NAME,
+                HAS_PASSWORD: !!process.env.DB_PASSWORD,
+                HAS_JWT_SECRET: !!process.env.JWT_SECRET
+            }
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: 'error',
+            message: 'Database connection failed',
+            error: {
+                message: error.message,
+                code: error.code,
+                stack: error.stack
+            },
+            envVars: {
+                PORT: process.env.PORT,
+                DB_HOST: process.env.DB_HOST,
+                DB_USER: process.env.DB_USER,
+                DB_NAME: process.env.DB_NAME,
+                HAS_PASSWORD: !!process.env.DB_PASSWORD,
+                HAS_JWT_SECRET: !!process.env.JWT_SECRET
+            }
+        });
+    }
+});
+
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/build/index.html');
 });
