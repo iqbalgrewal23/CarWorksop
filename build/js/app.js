@@ -259,7 +259,15 @@ async function submitBooking() {
         const res = await fetchAPI('/bookings', 'POST', payload);
         bookingData = {}; // Clear
         goToStep(4);
-        document.getElementById('bookingDetails').innerText = `ID: ${res.appointmentId}`;
+        const dateObj = new Date(`${payload.date}T${payload.time}`);
+        const formattedDate = dateObj.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        const formattedTime = dateObj.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+
+        document.getElementById('bookingDetails').innerHTML = `
+            <strong>Date:</strong> ${formattedDate} <br>
+            <strong>Time:</strong> ${formattedTime} <br>
+            <small>Booking Ref: #${res.appointmentId}</small>
+        `;
     } catch (e) {
         alert(e.message);
     }
