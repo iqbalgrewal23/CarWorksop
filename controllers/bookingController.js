@@ -13,7 +13,7 @@ const getAvailableSlots = async (req, res) => {
 
     try {
         // 1. Get total capacity (Total Bays)
-        const [bays] = await db.query('SELECT COUNT(*) as count FROM Bays WHERE status != "Maintenance"');
+        const [bays] = await db.query("SELECT COUNT(*) as count FROM Bays WHERE status != 'Maintenance'");
         const totalBays = bays[0].count;
 
         // 2. Define operational hours (e.g., 9:00 to 17:00, hourly slots)
@@ -86,7 +86,7 @@ const createAppointment = async (req, res) => {
         }
 
         // Check availability again (race condition check, strictness depends on reqs)
-        const [bays] = await db.query('SELECT COUNT(*) as count FROM Bays WHERE status != "Maintenance"');
+        const [bays] = await db.query("SELECT COUNT(*) as count FROM Bays WHERE status != 'Maintenance'");
         const totalBays = bays[0].count;
 
         const [existing] = await db.query(`
