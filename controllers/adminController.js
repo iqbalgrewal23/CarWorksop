@@ -4,14 +4,12 @@ const db = require('../config/db');
 // Returns counts of 'Pending', 'Confirmed', 'In-Progress', 'Completed' appointments for the day.
 const getDashboardStats = async (req, res) => {
     try {
-        const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
         const query = `
             SELECT status, COUNT(*) as count 
             FROM Appointments 
-            WHERE appointment_date = ? 
             GROUP BY status
         `;
-        const [rows] = await db.query(query, [today]);
+        const [rows] = await db.query(query);
 
         const stats = {
             Pending: 0,
