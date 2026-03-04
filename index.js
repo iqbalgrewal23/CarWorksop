@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 3000;
 // Apply essential middleware
 app.use(cors({
     origin: '*', // Allow requests from any domain (like iqbalgrewal.com)
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
