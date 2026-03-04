@@ -429,8 +429,8 @@
             const id = document.getElementById('appt-id').value;
             const body = {
                 status: document.getElementById('appt-status').value,
-                bay_id: document.getElementById('appt-bay').value || null,
-                mechanic_id: document.getElementById('appt-mechanic').value || null,
+                bay_id: document.getElementById('appt-bay').value === "" ? null : document.getElementById('appt-bay').value,
+                mechanic_id: document.getElementById('appt-mechanic').value === "" ? null : document.getElementById('appt-mechanic').value,
                 mechanic_notes: document.getElementById('appt-notes').value
             };
             await fetchAPI(`/admin/appointments/${id}`, 'PATCH', body);
